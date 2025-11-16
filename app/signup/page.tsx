@@ -22,7 +22,7 @@ export default function SignupPage() {
           phone,
           address,
         },
-        emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/login` : undefined,
+        emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/pending` : undefined,
       }
     });
     setMessage(error ? error.message : "Signup successful. Check your email to verify. Admin will activate your account.");

@@ -27,9 +27,19 @@ export default function LoginPage() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        await supabase.from("profiles").select("status").eq("id", user.id).maybeSingle();
+        const { data } = await supabase.from("profiles").select("status").eq("id", user.id).maybeSingle();
+        const status = data?.status;
+        if (status !== "active") {
+          await supabase.auth.signOut();
+          setMessage("Your account is awaiting admin approval.");
+          setLoading(false);
+          router.push("/pending");
+          return;
+        }
       }
-    } catch {}
+    } catch {
+      // ignore check failures; let user through if status query failed
+    }
 
     setMessage("Success! Redirecting...");
     router.push("/");
@@ -105,4 +115,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
